@@ -45,13 +45,17 @@
             
             <f7-block>
                 <f7-block-title>Posts</f7-block-title>
-                <f7-list simple-list>
+                <f7-list
+                    v-if="posts.length > 0"
+                    simple-list
+                >
                     <f7-list-item
                         v-for="post in posts"
                         :key="post.id"
                         :title="post.data.post"
                     ></f7-list-item>
                 </f7-list>
+                <p v-else>There are no posts written... yet.</p>
             </f7-block>
         </f7-block>
 
@@ -245,11 +249,12 @@ export default {
         fetchPosts: function () {
             const postsRef = this.$firebase.database().ref('/posts');
 
-            postsRef.on('value', snapshot => {
-                const data = snapshot.val();
+            postsRef.on('child_added', (snapshot, prevChildKey) => {
+                const newPost = snapshot.val();
 
-                Object.keys(data).forEach(key => {
-                    this.posts.push({ uid: key, data: data[key] });
+                this.posts.push({
+                    uid: snapshot.key,
+                    data: newPost
                 });
             });
         }
