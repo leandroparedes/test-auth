@@ -57,93 +57,97 @@
 
         <!-- User is not authenticated -->
         <f7-block v-else>
+            <f7-row>
+                <f7-col width="100" medium="50">
+                    <f7-card>
+                        <!-- Login form -->
+                        <f7-card-header>Sign In</f7-card-header>
+                        <f7-card-content>
+                            <form @submit.prevent="loginWithEmail">
+                                <f7-list no-hairlines-md>
+                                    <f7-list-input
+                                        :value="login.email"
+                                        @input="login.email = $event.target.value"
+                                        label="Email Address"
+                                        placeholder="domain@example.cl"
+                                        type="email"
+                                        required
+                                    ></f7-list-input>
 
-            <f7-card>
-                <!-- Login form -->
-                <f7-card-header>Sign In</f7-card-header>
-                <f7-card-content>
-                    <form @submit.prevent="loginWithEmail">
-                        <f7-list no-hairlines-md>
-                            <f7-list-input
-                                :value="login.email"
-                                @input="login.email = $event.target.value"
-                                label="Email Address"
-                                placeholder="domain@example.cl"
-                                type="email"
-                                required
-                            ></f7-list-input>
+                                    <f7-list-input
+                                        :value="login.password"
+                                        @input="login.password = $event.target.value"
+                                        label="Password"
+                                        type="password"
+                                        required
+                                    ></f7-list-input>
+                                </f7-list>
 
-                            <f7-list-input
-                                :value="login.password"
-                                @input="login.password = $event.target.value"
-                                label="Password"
-                                type="password"
-                                required
-                            ></f7-list-input>
-                        </f7-list>
+                                <f7-button fill type="submit">Login with email</f7-button>
+                            </form>
+                        </f7-card-content>
+                    </f7-card>
 
-                        <f7-button fill type="submit">Login with email</f7-button>
-                    </form>
-                </f7-card-content>
-            </f7-card>
+                    <f7-block>
+                        <f7-block-title>Other sign in methods</f7-block-title>
+                        <f7-button
+                            color="red"
+                            fill
+                            @click="loginWithGoogle"
+                        >
+                            Sign in with Google
+                        </f7-button>
+                    </f7-block>
+                </f7-col>
+                <f7-col width="100" medium="50">
+                    <!-- Register form -->
+                    <f7-block>
+                        <f7-button
+                            v-if="! register.showRegisterForm"
+                            outline
+                            @click="register.showRegisterForm = true"
+                        >
+                            Create new account
+                        </f7-button>
+                    </f7-block>
 
-            <f7-block>
-                <f7-block-title>Other sign in methods</f7-block-title>
-                <f7-button
-                    color="red"
-                    fill
-                    @click="loginWithGoogle"
-                >
-                    Sign in with Google
-                </f7-button>
-            </f7-block>
+                    <f7-block>
+                        <form
+                            v-if="register.showRegisterForm"
+                            @submit.prevent="registerAccount"
+                        >
+                            <f7-list no-hairlines-md>
+                                <f7-list-input
+                                    :value="register.name"
+                                    @input="register.name = $event.target.value"
+                                    label="What's your name?"
+                                    placeholder="Leandro Paredes"
+                                    type="text"
+                                    required
+                                ></f7-list-input>
+                                <f7-list-input
+                                    :value="register.email"
+                                    @input="register.email = $event.target.value"
+                                    label="The email address you are going to sign in with"
+                                    placeholder="domain@example.cl"
+                                    type="email"
+                                    required
+                                ></f7-list-input>
+                                <f7-list-input
+                                    :value="register.password"
+                                    @input="register.password = $event.target.value"
+                                    label="Choose a password"
+                                    placeholder="password"
+                                    type="password"
+                                    required
+                                ></f7-list-input>
+                            </f7-list>
 
-            <!-- Register form -->
-            <f7-block>
-                <f7-button
-                    v-if="! register.showRegisterForm"
-                    outline
-                    @click="register.showRegisterForm = true"
-                >
-                    Create new account
-                </f7-button>
-            </f7-block>
-
-            <f7-block>
-                <form
-                    v-if="register.showRegisterForm"
-                    @submit.prevent="registerAccount"
-                >
-                    <f7-list no-hairlines-md>
-                        <f7-list-input
-                            :value="register.name"
-                            @input="register.name = $event.target.value"
-                            label="What's your name?"
-                            placeholder="Leandro Paredes"
-                            type="text"
-                            required
-                        ></f7-list-input>
-                        <f7-list-input
-                            :value="register.email"
-                            @input="register.email = $event.target.value"
-                            label="The email address you are going to sign in with"
-                            placeholder="domain@example.cl"
-                            type="email"
-                            required
-                        ></f7-list-input>
-                        <f7-list-input
-                            :value="register.password"
-                            @input="register.password = $event.target.value"
-                            label="Choose a password"
-                            placeholder="password"
-                            type="password"
-                            required
-                        ></f7-list-input>
-                    </f7-list>
-
-                    <f7-button fill type="submit">Create new account</f7-button>
-                </form>
-            </f7-block>
+                            <f7-button fill type="submit">Create new account</f7-button>
+                        </form>
+                    </f7-block>
+                </f7-col>
+            </f7-row>
         </f7-block>
     </f7-page>
 </template>
