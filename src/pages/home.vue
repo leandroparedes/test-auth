@@ -26,6 +26,33 @@
             <h1 class="text-align-center">{{ user.displayName }}</h1>
         
             <f7-button @click="logout">Logout</f7-button>
+
+            <f7-block>
+                <f7-block-title>Write new post</f7-block-title>
+                <form @submit.prevent="submitPost">
+                    <f7-list no-hairlines-md>
+                        <f7-list-input
+                            :value="post"
+                            @input="post = $event.target.value"
+                            type="text"
+                            placeholder="Here you can write a new post..."
+                            required
+                        ></f7-list-input>
+                        <f7-button fill type="submit">Save</f7-button>
+                    </f7-list>
+                </form>
+            </f7-block>
+            
+            <f7-block>
+                <f7-block-title>Posts</f7-block-title>
+                <f7-list simple-list>
+                    <f7-list-item
+                        v-for="post in posts"
+                        :key="post.id"
+                        :title="post.data.post"
+                    ></f7-list-item>
+                </f7-list>
+            </f7-block>
         </f7-block>
 
         <!-- User is not authenticated -->
@@ -138,17 +165,23 @@ export default {
                 password: '',
                 showRegisterForm: false
             },
+
+            post: '',
+            posts: []
         };
     },
 
     mounted: function () {
         this.$f7.dialog.preloader();
 
+        // todo: revisar donde poner este código.
         this.$firebase.auth().onAuthStateChanged(user => {
             this.user = user;
 
             this.$f7.dialog.close();
         });
+
+        this.fetchPosts();
     },
 
     methods: {
@@ -186,6 +219,35 @@ export default {
                     .catch(error => {
                         console.error('Error while trying to loggout user', error);
                     });
+        },
+
+        submitPost: function () {
+            const endpoint = 'http://localhost:5001/test-auth-d4c7e/us-central1/posts';
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    post: this.post,
+                    user_uid: this.user.uid
+                })
+            }).finally(() => {
+                this.post = '';
+            });
+        },
+        fetchPosts: function () {
+            const postsRef = this.$firebase.database().ref('/posts');
+
+            postsRef.on('value', snapshot => {
+                const data = snapshot.val();
+
+                Object.keys(data).forEach(key => {
+                    this.posts.push({ uid: key, data: data[key] });
+                });
+            });
         }
     }
 }

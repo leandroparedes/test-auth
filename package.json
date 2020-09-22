@@ -21,7 +21,9 @@
     "Samsung >= 5"
   ],
   "dependencies": {
+    "cors": "^2.8.5",
     "dom7": "^2.1.5",
+    "express": "^4.17.1",
     "firebase": "^7.21.0",
     "framework7": "^5.7.12",
     "framework7-icons": "^3.0.1",
