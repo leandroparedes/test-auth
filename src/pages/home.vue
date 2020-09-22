@@ -1,12 +1,8 @@
 <template>
     <f7-page name="home">
         <!-- Top Navbar -->
-        <f7-navbar large :sliding="false">
-            <f7-nav-left>
-                <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
-            </f7-nav-left>
-            <f7-nav-title sliding>test-auth</f7-nav-title>
-            <f7-nav-title-large>test-auth</f7-nav-title-large>
+        <f7-navbar>
+            <f7-nav-title>test-auth</f7-nav-title>
         </f7-navbar>
 
         <!-- Page content -->
@@ -240,11 +236,9 @@ export default {
                 },
                 body: JSON.stringify({
                     post: this.post,
-                    user_uid: this.user.uid
+                    user_uid: this.user.uid // no se si esto esta bien
                 })
-            }).finally(() => {
-                this.post = '';
-            });
+            }).finally(() => this.post = '');
         },
         fetchPosts: function () {
             const postsRef = this.$firebase.database().ref('/posts');
