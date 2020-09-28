@@ -53,6 +53,37 @@
                 </f7-list>
                 <p v-else>There are no posts written... yet.</p>
             </f7-block>
+
+            <f7-block>
+                <f7-block-title>Write new message</f7-block-title>
+                <form @submit.prevent="submitMessage">
+                    <f7-list no-hairlines-md>
+                        <f7-list-input
+                            :value="message"
+                            @input="message = $event.target.value"
+                            type="text"
+                            placeholder="Here you can write a new message..."
+                            required
+                        ></f7-list-input>
+                        <f7-button fill type="submit">Save</f7-button>
+                    </f7-list>
+                </form>
+            </f7-block>
+
+            <f7-block>
+                <f7-block-title>Messages</f7-block-title>
+                <f7-list
+                    v-if="messages.length > 0"
+                    simple-list
+                >
+                    <f7-list-item
+                        v-for="message in messages"
+                        :key="message.id"
+                        :title="message.data.message"
+                    ></f7-list-item>
+                </f7-list>
+                <p v-else>There are no messages written... yet.</p>
+            </f7-block>
         </f7-block>
 
         <!-- User is not authenticated -->
@@ -171,7 +202,10 @@ export default {
             },
 
             post: '',
-            posts: []
+            posts: [],
+
+            message: '',
+            messages: []
         };
     },
 
@@ -186,6 +220,8 @@ export default {
         });
 
         this.fetchPosts();
+
+        console.log(this.posts);
     },
 
     methods: {
@@ -226,7 +262,7 @@ export default {
         },
 
         submitPost: function () {
-            const endpoint = 'http://localhost:5001/test-auth-d4c7e/us-central1/posts';
+            const endpoint = 'http://localhost:5001/test-auth-d4c7e/us-central1/posts/posts';
 
             fetch(endpoint, {
                 method: 'POST',
@@ -241,6 +277,7 @@ export default {
             }).finally(() => this.post = '');
         },
         fetchPosts: function () {
+            // dejar esto como variable de componente para hacer .off()
             const postsRef = this.$firebase.database().ref('/posts');
 
             postsRef.on('child_added', (snapshot, prevChildKey) => {
@@ -251,7 +288,23 @@ export default {
                     data: newPost
                 });
             });
-        }
+        },
+
+        submitMessage: function () {
+            const endpoint = 'http://localhost:5001/test-auth-d4c7e/us-central1/messages/messages';
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: this.message,
+                    user_uid: this.user.uid // no se si esto esta bien
+                })
+            }).finally(() => this.message = '');
+        },
     }
 }
 </script>
