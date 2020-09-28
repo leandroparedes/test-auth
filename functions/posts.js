@@ -1,7 +1,7 @@
 const { app } = require('./init/express');
 const { database } = require('./init/admin');
 
-app.post('/', async (req, res) => {
+app.post('/posts', async (req, res) => {
     const post = req.body.post;
     const userUid = req.body.user_uid;
 
