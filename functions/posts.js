@@ -11,4 +11,4 @@ app.post('/', async (req, res) => {
     }).then(() => res.end());
 });
 
-module.exports = { posts: app };
+module.exports = { postsApp: app };
